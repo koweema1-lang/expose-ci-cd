@@ -1,26 +1,26 @@
-name: Démo CI/CD de déploiement
+name: Déploiement vers GitHub Pages
 
-# Se déclenche à chaque push sur main
 on:
   push:
     branches: [ main ]
 
-jobs:
-  deploy-demo:
-    runs-on: ubuntu-latest
+permissions:
+  contents: write
 
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
     steps:
-      # 1. Récupère le code du dépôt (indispensable)
-      - name: Checkout code
+      - name: Récupérer le code
         uses: actions/checkout@v4
 
-      # 2. Exemple d'étape qui réussit toujours
-      - name: Afficher un message de succès
-        run: echo "🎉 Pipeline exécuté avec succès !"
+      - name: Créer un fichier index.html simple
+        run: |
+          mkdir site
+          echo '<h1>Bravo !</h1><p>Ceci est le résultat final visible dans le navigateur.</p>' > site/index.html
 
-      # 3. (optionnel) Vérifier la version de Node si tu en as besoin
-      # - name: Setup Node
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: 18
-      # - run: node --version
+      - name: Déployer sur GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: site
+          branch: gh-pages
